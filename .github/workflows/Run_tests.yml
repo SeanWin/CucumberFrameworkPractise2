@@ -50,3 +50,19 @@ jobs:
 
       - name: Run Firefox tests
         run: mvn test -Dbrowser=firefox
+
+  edge-tests:
+    name: Edge Tests
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Run Edge tests
+        run: mvn test -Dbrowser=edge
