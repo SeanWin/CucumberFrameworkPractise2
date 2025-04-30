@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         browser: [chrome, firefox, edge]
+
     name: Run tests on ${{ matrix.browser }}
     steps:
       - name: Checkout code
@@ -26,7 +27,8 @@ jobs:
       - name: Set up ${{ matrix.browser }}
         uses: browser-actions/setup-${{ matrix.browser }}@latest
 
-      - run: ${{ matrix.browser }} --version
+      - name: Print browser version
+        run: ${{ matrix.browser }} --version
 
-      - name: Run tests on ${{ matrix.browser }}
+      - name: Run tests
         run: mvn test -Dbrowser=${{ matrix.browser }}
