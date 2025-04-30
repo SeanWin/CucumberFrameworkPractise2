@@ -1,4 +1,4 @@
-name: Run Tests
+name: Run Cross-Browser Tests
 
 on:
   push:
@@ -7,9 +7,12 @@ on:
     branches: [ main ]
 
 jobs:
-  test-chrome:
+  test:
     runs-on: ubuntu-latest
-    name: Chrome Tests
+    strategy:
+      matrix:
+        browser: [chrome, firefox, edge]
+    name: Run tests on ${{ matrix.browser }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,9 +23,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Chrome
-        uses: browser-actions/setup-chrome@latest
-      - run: chrome --version
+      - name: Set up ${{ matrix.browser }}
+        uses: browser-actions/setup-${{ matrix.browser }}@latest
 
-      - name: Run Chrome tests
-        run: mvn test -Dbrowser=chrome
+      - run: ${{ matrix.browser }} --version
+
+      - name: Run tests on ${{ matrix.browser }}
+        run: mvn test -Dbrowser=${{ matrix.browser }}
