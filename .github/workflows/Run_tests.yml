@@ -7,13 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  chrome-tests:
+    name: Chrome Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        browser: [chrome, firefox, edge]
-
-    name: Run tests on ${{ matrix.browser }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,14 +17,36 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
 
-      - name: Set up ${{ matrix.browser }}
-        uses: browser-actions/setup-${{ matrix.browser }}@latest
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
 
-      - name: Print browser version
-        run: ${{ matrix.browser }} --version
+      - name: Check Chrome version
+        run: google-chrome --version
 
-      - name: Run tests
-        run: mvn test -Dbrowser=${{ matrix.browser }}
+      - name: Run Chrome tests
+        run: mvn test -Dbrowser=chrome
+
+  firefox-tests:
+    name: Firefox Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Firefox
+        uses: browser-actions/setup-firefox@latest
+
+      - name: Check Firefox version
+        run: firefox --version
+
+      - name: Run Firefox tests
+        run: mvn test -Dbrowser=firefox
