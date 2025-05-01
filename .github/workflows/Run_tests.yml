@@ -14,11 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Set up Java & cache dependencies
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+          cache: maven
+          cache-dependency-path: '**/pom.xml'
 
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@latest
@@ -36,11 +38,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Set up Java & cache dependencies
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+          cache: maven
+          cache-dependency-path: '**/pom.xml'
 
       - name: Set up Firefox
         uses: browser-actions/setup-firefox@latest
@@ -53,16 +57,21 @@ jobs:
 
   edge-tests:
     name: Edge Tests
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+      - name: Set up Java & cache dependencies
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+          cache: maven
+          cache-dependency-path: '**/pom.xml'
+
+      - name: Set up Edge
+        uses: browser-actions/setup-edge@latest
 
       - name: Run Edge tests
         run: mvn test -Dbrowser=edge
