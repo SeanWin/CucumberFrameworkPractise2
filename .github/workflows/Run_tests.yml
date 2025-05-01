@@ -1,10 +1,12 @@
 name: Run Cross-Browser Tests
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+
+permissions:
+  pull-requests: write
+  contents: write
 
 jobs:
   chrome-tests:
@@ -75,4 +77,16 @@ jobs:
 
       - name: Run Edge tests
         run: mvn test -Dbrowser=edge
-        #comment
+
+  automerge:
+    name: Auto Merge PR
+    runs-on: ubuntu-latest
+    needs: [chrome-tests, firefox-tests, edge-tests]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Enable auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: squash
+          pull-request-number: ${{ github.event.pull_request.number }}
